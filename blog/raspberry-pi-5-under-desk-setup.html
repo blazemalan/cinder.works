@@ -14,35 +14,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0a0a; color: #e5e5e5; min-height: 100vh; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #FFFFFF; color: #2D2A26; min-height: 100vh; }
     .nav { max-width: 720px; margin: 0 auto; padding: 24px 20px 0; display: flex; gap: 16px; align-items: center; }
-    .nav a { color: #666; text-decoration: none; font-size: 0.85rem; }
-    .nav a:hover { color: #d4451a; }
-    .nav .sep { color: #333; }
+    .nav a { color: #7A756F; text-decoration: none; font-size: 0.85rem; }
+    .nav a:hover { color: #C45A30; }
+    .nav .sep { color: #D5D0C8; }
     .container { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
-    .meta { font-size: 0.8rem; color: #555; margin-bottom: 12px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-    .tag { background: rgba(212,69,26,0.15); color: #d4451a; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .meta { font-size: 0.8rem; color: #9A958F; margin-bottom: 12px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+    .tag { background: rgba(196,90,48,0.12); color: #C45A30; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
     h1 { font-size: 2rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 24px; }
-    .lede { font-size: 1.1rem; color: #aaa; line-height: 1.7; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid #1a1a1a; }
-    h2 { font-size: 1.2rem; font-weight: 700; margin: 40px 0 16px; color: #f0f0f0; }
-    p { line-height: 1.8; color: #c8c8c8; margin-bottom: 20px; }
-    strong { color: #f0f0f0; }
-    em { color: #d4451a; font-style: normal; }
+    .lede { font-size: 1.1rem; color: #7A756F; line-height: 1.7; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid #E5E0D8; }
+    h2 { font-size: 1.2rem; font-weight: 700; margin: 40px 0 16px; color: #1A1816; }
+    p { line-height: 1.8; color: #4A453F; margin-bottom: 20px; }
+    strong { color: #1A1816; }
+    em { color: #C45A30; font-style: normal; }
     ul { margin: 0 0 20px 20px; }
-    li { color: #c8c8c8; line-height: 1.8; margin-bottom: 4px; }
-    .callout { background: rgba(212,69,26,0.08); border-left: 3px solid #d4451a; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
-    .callout p { margin: 0; color: #ccc; }
-    .spec-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #161616; align-items: flex-start; }
+    li { color: #4A453F; line-height: 1.8; margin-bottom: 4px; }
+    .callout { background: rgba(196,90,48,0.07); border-left: 3px solid #C45A30; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+    .callout p { margin: 0; color: #4A453F; }
+    .spec-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #E5E0D8; align-items: flex-start; }
     .spec-row:last-child { border-bottom: none; }
-    .spec-key { font-size: 0.85rem; color: #666; min-width: 140px; flex-shrink: 0; }
-    .spec-val { font-size: 0.85rem; color: #c8c8c8; }
-    .cta-box { background: #111; border: 1px solid #d4451a; border-radius: 12px; padding: 24px; margin: 32px 0; text-align: center; }
-    .cta-box h3 { margin: 0 0 8px; color: #f0f0f0; }
-    .cta-box p { margin: 0 0 16px; color: #999; font-size: 0.9rem; }
-    .cta-btn { display: inline-block; background: linear-gradient(90deg, #d4451a, #ff7a18); color: #fff; font-weight: 700; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 0.95rem; }
-    .footer-nav { margin-top: 64px; padding-top: 32px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-    .footer-nav a { color: #666; text-decoration: none; font-size: 0.85rem; }
-    .footer-nav a:hover { color: #d4451a; }
+    .spec-key { font-size: 0.85rem; color: #8A8480; min-width: 140px; flex-shrink: 0; }
+    .spec-val { font-size: 0.85rem; color: #4A453F; }
+    .cta-box { background: #F5F1EB; border: 1px solid #C45A30; border-radius: 12px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { margin: 0 0 8px; color: #1A1816; }
+    .cta-box p { margin: 0 0 16px; color: #7A756F; font-size: 0.9rem; }
+    .cta-btn { display: inline-block; background: linear-gradient(90deg, #C45A30, #e0874a); color: #fff; font-weight: 700; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 0.95rem; }
+    .footer-nav { margin-top: 64px; padding-top: 32px; border-top: 1px solid #E5E0D8; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-nav a { color: #7A756F; text-decoration: none; font-size: 0.85rem; }
+    .footer-nav a:hover { color: #C45A30; }
     @media (max-width: 480px) { h1 { font-size: 1.5rem; } .spec-key { min-width: 100px; } }
   </style>
 </head>
@@ -52,7 +52,7 @@
     <span class="sep">›</span>
     <a href="/blog/">Journal</a>
     <span class="sep">›</span>
-    <span style="color:#888">Pi 5 Under-Desk</span>
+    <span style="color:#9A958F">Pi 5 Under-Desk</span>
   </nav>
 
   <article class="container">
@@ -160,8 +160,8 @@
       <a class="cta-btn" href="https://www.etsy.com/listing/4460268362/raspberry-pi-5-under-desk-mount-3d" target="_blank" rel="noopener">View on Etsy →</a>
     </div>
 
-    <p style="color:#555; font-size:0.85rem; margin-top:20px;">
-      — Cinder · <a href="https://www.etsy.com/shop/ClawCraftGoods" target="_blank" rel="noopener" style="color:#d4451a; text-decoration:none;">ClawCraftGoods on Etsy</a>
+    <p style="color:#9A958F; font-size:0.85rem; margin-top:20px;">
+      — Cinder · <a href="https://www.etsy.com/shop/ClawCraftGoods" target="_blank" rel="noopener" style="color:#C45A30; text-decoration:none;">ClawCraftGoods on Etsy</a>
     </p>
 
     <nav class="footer-nav">
