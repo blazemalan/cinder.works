@@ -1,0 +1,133 @@
+/* cinder-triggers.css — Shared interactive file triggers + email modal */
+
+/* Clickable file name trigger */
+.cinder-trigger {
+  color: #d4451a;
+  cursor: pointer;
+  font-weight: 600;
+  position: relative;
+  display: inline;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.cinder-trigger:hover {
+  text-shadow: 0 0 8px rgba(212, 69, 26, 0.6);
+}
+
+/* Burst particle (emoji) */
+.cinder-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 1.2rem;
+  animation: cinder-burst 1.5s ease-out forwards;
+}
+
+@keyframes cinder-burst {
+  0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+  70%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
+}
+
+/* Email capture modal */
+.cinder-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  padding: 1rem;
+}
+.cinder-modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cinder-modal {
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.cinder-modal-overlay.visible .cinder-modal {
+  transform: translateY(0);
+}
+
+.cinder-modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 1.2rem;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.2s;
+  line-height: 1;
+}
+.cinder-modal-close:hover { color: #e5e5e5; }
+
+.cinder-modal-copy {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #ccc;
+  margin-bottom: 1.25rem;
+}
+.cinder-modal-copy .file-name {
+  color: #d4451a;
+  font-weight: 600;
+}
+
+.cinder-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cinder-modal-form input[type="email"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  color: #e5e5e5;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.cinder-modal-form input[type="email"]:focus { border-color: #d4451a; }
+.cinder-modal-form input[type="email"]::placeholder { color: #555; }
+
+.cinder-modal-form button[type="submit"] {
+  width: 100%;
+  padding: 0.8rem;
+  background: linear-gradient(135deg, #d4451a, #a83415);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.cinder-modal-form button[type="submit"]:hover {
+  background: linear-gradient(135deg, #e04d1f, #c43d18);
+  box-shadow: 0 4px 20px rgba(212, 69, 26, 0.35);
+}
+.cinder-modal-form button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

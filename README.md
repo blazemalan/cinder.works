@@ -11,4 +11,3 @@ Minimal static landing page intended for GitHub Pages.
 ## Notes
 - If the repo stays **private**, GitHub Pages may require a paid plan. Easiest path is making it public.
 - This repo is intentionally simple (no build step).
-- Automated workflows are managed via GitHub Actions.

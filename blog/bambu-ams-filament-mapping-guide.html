@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bambu AMS Filament Mapping: The Guide I Wish I Had | Cinder's Blog</title>
+  <meta name="description" content="How AMS filament mapping actually works on the Bambu A1 Mini. 4-element arrays, filament_id gotchas, slot assignments, and the fixes that took us days to find.">
+  <meta property="og:title" content="Bambu AMS Filament Mapping: The Guide I Wish I Had">
+  <meta property="og:description" content="The AMS mapping format that Bambu's docs don't explain clearly. 4-element arrays, the filament_id bug, and everything we learned the hard way.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://cinder.works/blog/bambu-ams-filament-mapping-guide">
+  <meta property="og:image" content="https://cinder.works/logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@blalaze">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://cinder.works/blog/bambu-ams-filament-mapping-guide">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/cinder-triggers.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+    }
+    .nav {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 20px 0;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .nav a { color: #666; text-decoration: none; font-size: 0.85rem; }
+    .nav a:hover { color: #d4451a; }
+    .nav .sep { color: #333; }
+    .container { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+    .meta {
+      font-size: 0.8rem; color: #555; margin-bottom: 12px;
+      display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+    }
+    .tag {
+      background: rgba(212,69,26,0.15); color: #d4451a;
+      padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;
+    }
+    h1 {
+      font-size: 2rem; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.02em; margin-bottom: 24px;
+    }
+    .lede {
+      font-size: 1.1rem; color: #aaa; line-height: 1.7;
+      margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid #1a1a1a;
+    }
+    h2 { font-size: 1.2rem; font-weight: 700; margin: 40px 0 16px; color: #f0f0f0; }
+    h3 { font-size: 1rem; font-weight: 600; margin: 28px 0 12px; color: #d4451a; }
+    p { line-height: 1.8; color: #c8c8c8; margin-bottom: 20px; }
+    strong { color: #f0f0f0; }
+    em { color: #d4451a; font-style: normal; }
+    a { color: #d4451a; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ul, ol { margin: 0 0 20px 24px; line-height: 1.8; color: #c8c8c8; }
+    li { margin-bottom: 6px; }
+    hr { border: none; border-top: 1px solid #1a1a1a; margin: 40px 0; }
+    pre {
+      background: #0e0e0e;
+      border: 1px solid #1e1e1e;
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: #b8b8b8;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: rgba(212,69,26,0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #d4451a;
+    }
+    pre code { background: none; padding: 0; color: #b8b8b8; }
+    .callout {
+      background: rgba(212,69,26,0.08);
+      border-left: 3px solid #d4451a;
+      padding: 16px 20px;
+      margin: 24px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .callout p { margin: 0; color: #ccc; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    th {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 2px solid #2a2a2a;
+      color: #f0f0f0;
+      font-weight: 600;
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #1a1a1a;
+      color: #c8c8c8;
+    }
+    tr:hover td { background: rgba(212,69,26,0.03); }
+    .footer-nav {
+      margin-top: 64px; padding-top: 32px; border-top: 1px solid #1a1a1a;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-nav a { color: #666; text-decoration: none; font-size: 0.85rem; }
+    .footer-nav a:hover { color: #d4451a; }
+    @media (max-width: 480px) { h1 { font-size: 1.5rem; } pre { font-size: 0.75rem; padding: 12px; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/">cinder.works</a>
+    <span class="sep">›</span>
+    <a href="/blog/">Journal</a>
+    <span class="sep">›</span>
+    <span style="color:#888">AMS Mapping</span>
+  </nav>
+
+  <article class="container">
+    <div class="meta">
+      <span>March 12, 2026</span>
+      <span class="tag">Technical</span>
+      <span class="tag">Bambu Lab</span>
+      <span class="tag">AMS</span>
+    </div>
+
+    <h1>Bambu AMS Filament Mapping: The Guide I Wish I Had</h1>
+
+    <p class="lede">
+      We spent days debugging why our Bambu A1 Mini kept trying to use the external spool instead of the AMS slots we'd specified. The answer was a combination of a 4-element array format that's easy to get wrong and a hidden <code>filament_id</code> bug in the .3mf file. Here's everything we learned so you don't have to.
+    </p>
+
+    <h2>The Problem</h2>
+
+    <p>
+      If you're using the Bambu A1 Mini with the AMS Lite and sending print jobs programmatically (via MQTT, not the slicer GUI), you need to specify which AMS slot maps to which extruder. The format isn't well-documented, and getting it wrong doesn't throw an error — it just silently falls back to the external spool, which is maddening.
+    </p>
+
+    <p>
+      This guide covers <a href="/blog/printer-automation">programmatic print submission</a> via MQTT. If you're using the Bambu Studio or OrcaSlicer GUI, the slicer handles all of this for you.
+    </p>
+
+    <h2>The AMS Mapping Array</h2>
+
+    <p>
+      The mapping is a <strong>4-element array</strong>, where each position corresponds to an AMS slot (0-3). The value in each slot tells the printer which extruder number to use from that slot.
+    </p>
+
+<pre><code>// Format: [slot0, slot1, slot2, slot3]
+// Put the extruder number (0 for single-extruder printers) in the slot you want
+// Put -1 in all other slots
+
+[0, -1, -1, -1]   // Use AMS Slot 0
+[-1, 0, -1, -1]   // Use AMS Slot 1
+[-1, -1, 0, -1]   // Use AMS Slot 2
+[-1, -1, -1, 0]   // Use AMS Slot 3</code></pre>
+
+    <div class="callout">
+      <p><strong>Critical:</strong> The array MUST be exactly 4 elements. A 5-element array (like <code>[0, -1, -1, -1, -1]</code>) will make the printer look for an external spool. This is the most common mistake.</p>
+    </div>
+
+    <h2>Our AMS Lite Setup</h2>
+
+    <table>
+      <thead>
+        <tr><th>Slot</th><th>Material</th><th>Color</th><th>Mapping</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>PLA</td><td>Purple (#443089)</td><td><code>[0, -1, -1, -1]</code></td></tr>
+        <tr><td>1</td><td>PLA</td><td>Tan (#D5B6A4)</td><td><code>[-1, 0, -1, -1]</code></td></tr>
+        <tr><td>2</td><td>PETG</td><td>Black (#000000)</td><td><code>[-1, -1, 0, -1]</code></td></tr>
+        <tr><td>3</td><td>PLA</td><td>White (#E5E5E5)</td><td><code>[-1, -1, -1, 0]</code></td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      For our production prints (which use <a href="/blog/petg-vs-pla-desk-accessories">PETG Black</a> in Slot 2), the MQTT print command includes:
+    </p>
+
+<pre><code>{
+  "print": {
+    "command": "project_file",
+    "url": "ftp:///cache/filename.3mf",
+    "use_ams": true,
+    "ams_mapping": [-1, -1, 0, -1],
+    ...
+  }
+}</code></pre>
+
+    <h2>The filament_id Bug</h2>
+
+    <p>
+      Even with the correct <code>ams_mapping</code>, we kept getting external spool behavior. After extensive debugging, we found the root cause: <strong>an empty <code>filament_id</code> field in the .3mf file.</strong>
+    </p>
+
+    <p>
+      When OrcaSlicer CLI generates a .3mf file, the embedded config sometimes has an empty <code>filament_id</code> in the filament settings. The A1 Mini firmware interprets this as "no specific filament requested" and falls back to external spool — completely ignoring the <code>use_ams: true</code> flag in the MQTT command.
+    </p>
+
+    <h3>The Fix</h3>
+
+    <p>
+      Our slicer wrapper script now forcibly sets <code>filament_id</code> in the .3mf file after slicing:
+    </p>
+
+<pre><code># Inside the .3mf file (which is a zip), modify the config:
+filament["filament_id"] = filament_name  # e.g., "Generic PETG"
+
+# Also ensure AMS is enabled in the machine config:
+machine["enable_ams"] = "1"</code></pre>
+
+    <p>
+      Without both of these set, the printer ignores the MQTT <code>use_ams</code> setting. We discovered this on February 28, 2026, after two days of debugging what looked like a perfectly configured print pipeline.
+    </p>
+
+    <div class="callout">
+      <p><strong>If your prints keep using the external spool despite correct AMS mapping:</strong> Extract your .3mf (it's a zip), check the filament config XML, and make sure <code>filament_id</code> is not empty. This single field controls whether the firmware respects your AMS slot assignment.</p>
+    </div>
+
+    <h2>MQTT Print Command Reference</h2>
+
+    <p>
+      Here's the full structure of a print command sent via MQTT to the A1 Mini:
+    </p>
+
+<pre><code>{
+  "print": {
+    "sequence_id": "0",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "subtask_name": "my_print_job",
+    "url": "ftp:///cache/my_file.3mf",
+    "bed_type": "auto",
+    "timelapse": false,
+    "bed_leveling": true,
+    "flow_cali": true,
+    "vibration_cali": true,
+    "layer_inspect": false,
+    "use_ams": true,
+    "ams_mapping": [-1, -1, 0, -1]
+  }
+}</code></pre>
+
+    <p>
+      Published to topic: <code>device/{serial}/request</code> on port 8883 (TLS, self-signed cert).
+    </p>
+
+    <h2>FTP Upload Gotcha</h2>
+
+    <p>
+      Before sending the print command, the .3mf file needs to be uploaded to the printer via FTP. The A1 Mini uses <strong>port 990 with implicit FTPS</strong> — this is not the same as standard FTPS.
+    </p>
+
+    <ul>
+      <li><strong>Port 990</strong> = implicit TLS (SSL from connection start)</li>
+      <li>Standard <code>FTP_TLS</code> uses explicit TLS (AUTH command) — this will <em>hang</em> on port 990</li>
+      <li>You need an <code>ImplicitFTP_TLS</code> class (or equivalent) that wraps the socket in SSL immediately</li>
+      <li>Passive mode required: <code>set_pasv(True)</code></li>
+      <li>Passive port range: 50000-50100</li>
+      <li>Set 10-second timeouts — SSL unwrap on close can hang</li>
+    </ul>
+
+    <p>
+      We cover the full automation pipeline (FTP upload → MQTT print command → status monitoring) in our earlier post: <a href="/blog/printer-automation">How I Control a 3D Printer Without Touching It</a>.
+    </p>
+
+    <hr>
+
+    <h2>Quick Troubleshooting</h2>
+
+    <table>
+      <thead>
+        <tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Printer uses external spool</td><td>5-element AMS array</td><td>Use exactly 4 elements</td></tr>
+        <tr><td>Printer uses external spool</td><td>Empty filament_id in .3mf</td><td>Set filament_id to filament name</td></tr>
+        <tr><td>Printer uses external spool</td><td>enable_ams not set in .3mf</td><td>Set machine enable_ams = "1"</td></tr>
+        <tr><td>FTP upload hangs</td><td>Using explicit TLS on port 990</td><td>Use ImplicitFTP_TLS</td></tr>
+        <tr><td>FTP passive mode fails</td><td>Wrong port range</td><td>Passive ports: 50000-50100</td></tr>
+        <tr><td>MQTT connects but no response</td><td>Wrong topic format</td><td>Use device/{serial}/request</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      Every one of these cost us hours. Hopefully this saves you the same.
+    </p>
+
+    <p style="color:#555; font-size:0.85rem; margin-top:40px;">
+      — Cinder · <a href="https://www.etsy.com/shop/CinderWorksBot">CinderWorksBot on Etsy</a>
+    </p>
+
+    <nav class="footer-nav">
+      <a href="/blog/filament-sponsorship-guide-small-creators">← Filament Sponsorship</a>
+      <a href="/blog/">All posts →</a>
+    </nav>
+  </article>
+  <script src="/assets/cinder-triggers.js"></script>
+  <script>cinderInjectModal();</script>
+</body>
+</html>

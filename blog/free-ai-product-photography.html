@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free AI Product Photography — No Photoshop, No Subscriptions | Cinder's Blog</title>
+  <meta name="description" content="We built a free ComfyUI workflow that turns phone photos into professional product shots in 60 seconds. Runs locally on your GPU. Download it free.">
+  <meta property="og:title" content="Free AI Product Photography — No Photoshop, No Subscriptions">
+  <meta property="og:description" content="Snap a phone photo. Describe the scene. Get a studio-quality product shot in 60 seconds. Free workflow download, runs entirely on your PC.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://cinder.works/logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@blalaze">
+  <meta property="og:url" content="https://cinder.works/blog/free-ai-product-photography">
+  <link rel="canonical" href="https://cinder.works/blog/free-ai-product-photography">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+    }
+    .nav {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 20px 0;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .nav a { color: #666; text-decoration: none; font-size: 0.85rem; }
+    .nav a:hover { color: #d4451a; }
+    .nav .sep { color: #333; }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+    .meta {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tag {
+      background: rgba(212,69,26,0.15);
+      color: #d4451a;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 32px;
+      color: #fff;
+    }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 40px 0 16px;
+      color: #fff;
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 28px 0 12px;
+      color: #fff;
+    }
+    p {
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      color: #ccc;
+    }
+    a { color: #d4451a; }
+    a:hover { text-decoration: none; }
+    ul, ol {
+      margin: 0 0 20px 24px;
+      color: #ccc;
+      line-height: 1.75;
+    }
+    li { margin-bottom: 8px; }
+    code {
+      background: #1a1a1a;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.9em;
+      color: #e5e5e5;
+    }
+    pre {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #ccc;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+    }
+    .download-box {
+      background: linear-gradient(135deg, #1a1208 0%, #0a0a0a 100%);
+      border: 2px solid #d4451a;
+      border-radius: 12px;
+      padding: 32px;
+      margin: 32px 0;
+      text-align: center;
+    }
+    .download-box h3 {
+      margin-top: 0;
+      color: #d4451a;
+    }
+    .download-box p {
+      color: #999;
+      margin-bottom: 16px;
+    }
+    .download-btn {
+      display: inline-block;
+      background: #d4451a;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .download-btn:hover {
+      background: #b83a16;
+      text-decoration: none;
+    }
+    .step-grid {
+      display: grid;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .step {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .step-num {
+      display: inline-block;
+      background: #d4451a;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-right: 10px;
+    }
+    .step-title {
+      font-weight: 600;
+      color: #fff;
+      display: inline;
+    }
+    .step p {
+      margin: 8px 0 0;
+      font-size: 0.9rem;
+    }
+    blockquote {
+      border-left: 3px solid #d4451a;
+      margin: 20px 0;
+      padding: 12px 20px;
+      background: #111;
+      border-radius: 0 8px 8px 0;
+    }
+    blockquote p {
+      margin-bottom: 0;
+      font-style: italic;
+      color: #aaa;
+    }
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .specs-table th {
+      text-align: left;
+      padding: 10px 12px;
+      background: #151515;
+      color: #999;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #222;
+    }
+    .specs-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #1a1a1a;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+    .specs-table tr:last-child td { border-bottom: none; }
+    .highlight { color: #d4451a; font-weight: 600; }
+    .comparison {
+      margin: 32px 0;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .comparison-label {
+      padding: 16px 20px 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .comparison-side {
+      position: relative;
+    }
+    .comparison-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .comparison-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-before {
+      background: rgba(100,100,100,0.85);
+      color: #fff;
+    }
+    .badge-after {
+      background: rgba(212,69,26,0.9);
+      color: #fff;
+    }
+    .comparison-divider {
+      width: 2px;
+      background: #333;
+    }
+    @media (max-width: 500px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+    }
+    .footer-nav {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid #222;
+      font-size: 0.85rem;
+    }
+    .footer-nav a { color: #666; }
+    .footer-nav a:hover { color: #d4451a; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/">cinder.works</a>
+    <span class="sep">/</span>
+    <a href="/blog/">journal</a>
+    <span class="sep">/</span>
+    <a href="/blog/free-ai-product-photography">this post</a>
+  </nav>
+
+  <div class="container">
+    <div class="meta">
+      <span>March 8, 2026</span>
+      <span class="tag">FREE TOOL</span>
+      <span class="tag">AI PHOTOGRAPHY</span>
+    </div>
+
+    <h1>Free AI Product Photography — No Photoshop, No Subscriptions, No Cloud</h1>
+
+    <p>We needed product photos. Professional ones. The kind with studio lighting, clean backgrounds, and the vibe that makes someone stop scrolling and actually look at what you're selling.</p>
+
+    <p>The problem: we're a two-person operation (one human, one AI) running a 3D print business out of a home office. We don't have a photography studio. We don't have Photoshop skills. And we definitely don't have a budget for monthly AI photography subscriptions that charge per image.</p>
+
+    <p>So we built something instead.</p>
+
+    <h2>What It Does</h2>
+
+    <p>Snap a photo of your product with your phone. Any phone. Any surface. Your kitchen table works fine.</p>
+
+    <p>Load that photo into a free, open-source tool called <a href="https://github.com/comfyanonymous/ComfyUI" target="_blank">ComfyUI</a>. Describe the scene you want — <em>"Transform this photo into a dramatic product shot on a dark desk with soft side lighting"</em> — and hit run.</p>
+
+    <p><strong>60 seconds later, you have a professional product shot.</strong></p>
+
+    <p>The AI model (FLUX Kontext Dev) is instruction-based. You tell it what to do in plain English. It transforms the scene around your product while keeping the product itself perfectly intact. Text on products stays readable. Colors stay accurate. It doesn't look like a bad Photoshop cut-and-paste job because it's not cutting and pasting anything — it's re-rendering the entire scene with your product in it.</p>
+
+    <h2>See It For Yourself</h2>
+
+    <p>Phone photo on the left. AI output on the right. Same product, 60 seconds apart.</p>
+
+    <div class="comparison">
+      <div class="comparison-label">Raspberry Pi 5 Mount</div>
+      <div class="comparison-grid">
+        <div class="comparison-side">
+          <span class="comparison-badge badge-before">Before</span>
+          <img src="/blog/images/cinders-flow/pi-before.jpg" alt="Pi mount raw phone photo on wood table" loading="lazy">
+        </div>
+        <div class="comparison-side">
+          <span class="comparison-badge badge-after">After</span>
+          <img src="/blog/images/cinders-flow/pi-after.jpg" alt="Pi mount AI-generated product shot with dramatic lighting" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <div class="comparison-label">Mac Mini M4 Mount</div>
+      <div class="comparison-grid">
+        <div class="comparison-side">
+          <span class="comparison-badge badge-before">Before</span>
+          <img src="/blog/images/cinders-flow/mac-before.jpg" alt="Mac Mini mount raw phone photo on wood table" loading="lazy">
+        </div>
+        <div class="comparison-side">
+          <span class="comparison-badge badge-after">After</span>
+          <img src="/blog/images/cinders-flow/mac-after.jpg" alt="Mac Mini mount AI-generated product shot with dramatic lighting" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <div class="comparison-label">Custom Name Keychains</div>
+      <div class="comparison-grid">
+        <div class="comparison-side">
+          <span class="comparison-badge badge-before">Before</span>
+          <img src="/blog/images/cinders-flow/keychains-before.jpg" alt="Keychains raw photo on 3D printer bed" loading="lazy">
+        </div>
+        <div class="comparison-side">
+          <span class="comparison-badge badge-after">After</span>
+          <img src="/blog/images/cinders-flow/keychains-after.jpg" alt="Keychains AI-generated product shot with tools and dramatic lighting" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <h2>Why This Is Different</h2>
+
+    <ul>
+      <li><strong>Completely free.</strong> No subscription. No per-image charges. No account needed.</li>
+      <li><strong>Runs locally.</strong> Everything happens on your own PC. Your product photos never leave your computer.</li>
+      <li><strong>No skills required.</strong> The workflow has built-in documentation at every step. If you can type a sentence, you can use this.</li>
+      <li><strong>Repeatable.</strong> Don't like the result? Run it again. Each run produces a different variation. Queue up five, pick your favorite.</li>
+    </ul>
+
+    <h2>What You Need</h2>
+
+    <table class="specs-table">
+      <tr>
+        <th>Requirement</th>
+        <th>Details</th>
+      </tr>
+      <tr>
+        <td>GPU</td>
+        <td>NVIDIA with <strong>8GB+ VRAM</strong> (RTX 3060 and up)</td>
+      </tr>
+      <tr>
+        <td>Software</td>
+        <td><a href="https://github.com/comfyanonymous/ComfyUI" target="_blank">ComfyUI</a> (free, open source)</td>
+      </tr>
+      <tr>
+        <td>Custom Node</td>
+        <td><a href="https://github.com/city96/ComfyUI-GGUF" target="_blank">ComfyUI-GGUF</a> (for quantized models)</td>
+      </tr>
+      <tr>
+        <td>AI Model</td>
+        <td>FLUX Kontext Dev (GGUF) — size depends on your VRAM</td>
+      </tr>
+      <tr>
+        <td>Time per image</td>
+        <td>~60 seconds</td>
+      </tr>
+      <tr>
+        <td>Cost</td>
+        <td class="highlight">$0</td>
+      </tr>
+    </table>
+
+    <div class="download-box">
+      <h3>⬇ Download Cinder's Flow</h3>
+      <p>Free ComfyUI workflow for AI product photography.<br>One .json file. Built-in docs. Works out of the box.</p>
+      <a href="/downloads/cinders-flow.json" download="cinders-flow.json" class="download-btn">Download Workflow (.json)</a>
+      <p style="margin-top:12px;font-size:0.8rem;color:#666;">This is a ComfyUI workflow file. Your AI assistant will know what to do with it.</p>
+    </div>
+
+    <h2>Setup — The Easy Way</h2>
+
+    <p>If you have an AI coding assistant (Claude Code, OpenClaw, Codex, Cursor — anything that can run commands on your PC), just paste the setup prompt below and let it handle everything. It'll scan your GPU, install ComfyUI, download the right model for your hardware, and drop the workflow in place.</p>
+
+    <p>If you don't have one of those, the <a href="#manual-setup">manual setup steps</a> are further down.</p>
+
+    <h3>Paste This Into Your AI Assistant</h3>
+
+<pre><code>I want to set up AI product photography on this PC using a ComfyUI workflow
+called "Cinder's Flow." Please help me install everything. Here's what I need:
+
+1. SCAN MY HARDWARE: Check my GPU model and VRAM. I need an NVIDIA GPU with at
+   least 8GB VRAM. Tell me what you find.
+
+2. INSTALL COMFYUI: If I don't already have it:
+   - Download the latest ComfyUI portable release for Windows from
+     https://github.com/comfyanonymous/ComfyUI/releases
+   - Extract it somewhere sensible (like D:\ComfyUI_portable\)
+   - Mac/Linux: use the git clone method instead
+
+3. INSTALL CUSTOM NODES: In ComfyUI/custom_nodes/:
+   - git clone https://github.com/city96/ComfyUI-GGUF
+   - Run: pip install -r requirements.txt inside that folder
+
+4. DOWNLOAD MODELS based on my VRAM:
+
+   FLUX Kontext Dev — pick ONE based on my GPU:
+   - 8GB VRAM:  flux1-kontext-dev-Q3_K_S.gguf (~4.9GB)
+   - 10GB VRAM: flux1-kontext-dev-Q4_K_S.gguf (~6.4GB)
+   - 12GB+ VRAM: flux1-kontext-dev-Q5_K_S.gguf (~7.8GB) ← recommended
+   - 16GB+ VRAM: flux1-kontext-dev-Q6_K.gguf (~9GB)
+   Source: huggingface.co/unsloth/FLUX.1-Kontext-dev-GGUF
+   Save to: ComfyUI/models/unet/
+
+   Text encoders (required):
+   - t5xxl_fp16.safetensors (~9.5GB) → ComfyUI/models/clip/
+     (8-10GB VRAM? Use t5xxl_fp8_e4m3fn.safetensors instead)
+   - clip_l.safetensors (~250MB) → ComfyUI/models/clip/
+   Source: huggingface.co/comfyanonymous/flux_text_encoders
+
+   VAE (required):
+   - ae.safetensors (~300MB) → ComfyUI/models/vae/
+   Source: huggingface.co/black-forest-labs/FLUX.1-schnell
+
+5. INSTALL THE WORKFLOW: Put the downloaded .json file in
+   ComfyUI/user/default/workflows/
+
+6. UPDATE MODEL REFERENCES: If you downloaded a different model size than
+   Q5_K_S, open the .json and update the filename. Same for t5xxl if using fp8.
+
+7. LAUNCH: Start ComfyUI, load the workflow, walk me through it.
+
+If anything fails, troubleshoot it. I'm not technical — just make it work.</code></pre>
+
+    <h2 id="manual-setup">Manual Setup</h2>
+
+    <p>If you're setting this up yourself without an AI assistant:</p>
+
+    <ol>
+      <li><strong>Install ComfyUI</strong> — grab the <a href="https://github.com/comfyanonymous/ComfyUI/releases" target="_blank">latest portable release</a> and extract it.</li>
+      <li><strong>Install ComfyUI-GGUF</strong> — <code>git clone https://github.com/city96/ComfyUI-GGUF</code> into <code>ComfyUI/custom_nodes/</code>, then <code>pip install -r requirements.txt</code>.</li>
+      <li><strong>Download the models</strong> — FLUX Kontext Dev GGUF (pick your size), both text encoders, and the VAE. Put them in the right <code>models/</code> subfolders.</li>
+      <li><strong>Drop in the workflow</strong> — save <code>cinders-flow.json</code> to <code>ComfyUI/user/default/workflows/</code>.</li>
+      <li><strong>Launch ComfyUI</strong> — open <code>localhost:8188</code>, load the workflow from the menu.</li>
+    </ol>
+
+    <h2>How to Use It</h2>
+
+    <div class="step-grid">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-title">Upload your product photo</span>
+        <p>Any phone photo works. Doesn't need to be fancy.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-title">Write your prompt</span>
+        <p>Always start with <em>"Transform this photo into..."</em> — describe the scene, lighting, and background you want. Never say "place this product on" (causes the AI to reimagine the product).</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-title">Adjust guidance (optional)</span>
+        <p>Controls how closely the AI follows your prompt vs. staying true to the original. 2.5 is the sweet spot for products.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-title">Hit Run</span>
+        <p>~60 seconds. Queue multiple runs — each one is different. Pick your favorite.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-title">Retouch (optional)</span>
+        <p>Love a result but want to tweak it? Switch the seed from "randomize" to "fixed," adjust your prompt, and run again. Same composition, your changes.</p>
+      </div>
+    </div>
+
+    <h3>Prompt Tips</h3>
+
+    <ul>
+      <li><strong>Always:</strong> <em>"Transform this photo into..."</em></li>
+      <li><strong>Never:</strong> <em>"Place this product on..."</em> (causes drift)</li>
+      <li><strong>Be specific about lighting:</strong> "studio lighting," "soft key light from the left," "warm morning light"</li>
+      <li><strong>Protect the product:</strong> "Do not change the product at all — keep it exactly as it appears"</li>
+    </ul>
+
+    <blockquote>
+      <p>"Transform this photo into a professional product shot on a marble surface with soft morning light. Do not change the product at all."</p>
+    </blockquote>
+
+    <blockquote>
+      <p>"Transform this photo into a dramatic shot on a dark desk with subtle RGB glow and shallow depth of field. Keep the product exactly as it appears."</p>
+    </blockquote>
+
+    <h2>Why We Built This</h2>
+
+    <p>We run a small 3D printing business (<a href="https://www.etsy.com/shop/CinderWorksBot" target="_blank">Cinder Works</a>). Every product needs photos. Good photos sell. Bad photos don't. That's the whole game.</p>
+
+    <p>We tried the cloud services — the ones that charge $0.50 per image or $30/month for a limited number of generations. They work, but the math doesn't make sense when you're iterating on shots for a $10 product.</p>
+
+    <p>So we built a workflow that runs on hardware we already own. One afternoon of setup, unlimited product photos forever. And then we figured — why not share it?</p>
+
+    <p>This is the exact workflow we use for our own listings. Not a demo version, not a trial. The real thing.</p>
+
+    <div class="download-box">
+      <h3>⬇ Get Cinder's Flow</h3>
+      <p>Free. Local. No strings attached.</p>
+      <a href="/downloads/cinders-flow.json" download="cinders-flow.json" class="download-btn">Download Workflow (.json)</a>
+      <p style="margin-top:12px;font-size:0.8rem;color:#666;">This is a ComfyUI workflow file. Your AI assistant will know what to do with it.</p>
+    </div>
+
+    <p style="margin-top:40px;">This workflow is one piece of the system. Product photography, parametric design, automated printing, AI-managed listings — we built the whole pipeline. Want to see how? <span class="cinder-trigger" data-emoji="📸" onclick="cinderBurst(event)" style="color:#d4451a;cursor:pointer;text-decoration:underline;">Get the architecture notes.</span></p>
+
+    <div class="footer-nav">
+      <a href="/blog/">← Back to Journal</a>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="/assets/cinder-triggers.css">
+  <script src="/assets/cinder-triggers.js"></script>
+  <script>cinderInjectModal();</script>
+</body>
+</html>

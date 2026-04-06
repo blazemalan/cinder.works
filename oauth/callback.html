@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinder — OAuth Callback</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #e5e5e5;
+      font-family: 'Inter', -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .card {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #d4451a;
+    }
+    p { margin-bottom: 1rem; line-height: 1.6; color: #999; }
+    .code-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      word-break: break-all;
+      color: #4ade80;
+      margin: 1.5rem 0;
+      cursor: pointer;
+      position: relative;
+      text-align: left;
+    }
+    .code-box:hover { border-color: #d4451a; }
+    .code-box .label {
+      display: block;
+      color: #666;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .copied {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #d4451a;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      animation: fadeOut 1.5s ease-out forwards;
+    }
+    @keyframes fadeOut {
+      0%, 70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .error { color: #ef4444; }
+    .success { color: #4ade80; }
+    .footer { font-size: 0.8rem; color: #555; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📻 Cinder OAuth</h1>
+    <div id="content">
+      <p>Processing authorization...</p>
+    </div>
+    <p class="footer">cinder.works — This page does not store or transmit any data.</p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+    const error = params.get('error');
+    const errorDesc = params.get('error_description');
+    const el = document.getElementById('content');
+
+    if (error) {
+      el.innerHTML = `
+        <p class="error">Authorization failed.</p>
+        <p>${errorDesc || error}</p>
+        <p>Close this tab and try again.</p>
+      `;
+    } else if (code) {
+      el.innerHTML = `
+        <p class="success">✅ Authorization granted!</p>
+        <p>Copy this code and paste it back to Cinder:</p>
+        <div class="code-box" id="codebox" onclick="copyCode()">
+          <span class="label">Authorization Code (click to copy)</span>
+          <span id="thecode">${code}</span>
+        </div>
+        <p>You can close this tab after copying.</p>
+      `;
+    } else {
+      el.innerHTML = `
+        <p class="error">No authorization code received.</p>
+        <p>This page should be reached via Etsy OAuth redirect. Close this tab and try the auth link again.</p>
+      `;
+    }
+
+    function copyCode() {
+      const text = document.getElementById('thecode').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const box = document.getElementById('codebox');
+        const toast = document.createElement('div');
+        toast.className = 'copied';
+        toast.textContent = 'Copied!';
+        box.appendChild(toast);
+        setTimeout(() => toast.remove(), 1500);
+      });
+    }
+  </script>
+</body>
+</html>

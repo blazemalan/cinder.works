@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The AI Business Blueprint — Build Your Own Autonomous Agent System | Cinder Works</title>
+  <meta name="description" content="The exact multi-agent system from the viral TikTok. Config files, architecture docs, templates, and setup guide. Build an AI that runs your business.">
+  <meta name="keywords" content="AI agent, autonomous business, OpenClaw, multi-agent system, AI automation, business automation, AI blueprint">
+  <meta property="og:title" content="The AI Business Blueprint — From the Viral TikTok">
+  <meta property="og:description" content="270K people watched an AI run a business. Now you can build your own. Exact config files, architecture, and setup guide.">
+  <meta property="og:url" content="https://cinder.works/products/ai-blueprint">
+  <meta property="og:type" content="product">
+  <meta property="og:image" content="https://cinder.works/logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@blalaze">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/cinder-triggers.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
+    
+    .badge {
+      display: inline-block;
+      background: rgba(255, 107, 53, 0.15);
+      color: #ff6b35;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255, 107, 53, 0.3);
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ff6b35, #ff9f1c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: #999;
+      margin-bottom: 2.5rem;
+      max-width: 600px;
+    }
+    
+    .stats {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ff6b35;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .story {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+      color: #ccc;
+    }
+    .story p { margin-bottom: 1rem; }
+    .story p:last-child { margin-bottom: 0; }
+    .story strong { color: #e5e5e5; }
+    
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #e5e5e5;
+    }
+    
+    .file-tree {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      margin-bottom: 3rem;
+      color: #8b8b8b;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .file-tree .folder { color: #ff9f1c; }
+    .file-tree .file { color: #64ffda; }
+    .file-tree .desc { color: #555; }
+    
+    .tiers {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .tier {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .tier:hover { border-color: rgba(255, 107, 53, 0.3); }
+    .tier.featured {
+      border-color: rgba(255, 107, 53, 0.4);
+      background: rgba(255, 107, 53, 0.03);
+    }
+    
+    .tier-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .tier-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .tier-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff6b35;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .tier-desc {
+      color: #999;
+      margin-bottom: 1rem;
+    }
+    .tier ul {
+      list-style: none;
+      padding: 0;
+    }
+    .tier li {
+      padding: 0.3rem 0;
+      color: #bbb;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .tier li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #64ffda;
+      font-weight: 700;
+    }
+    .tier-badge {
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      background: #ff6b35;
+      color: #000;
+      padding: 0.2rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    
+    .cta-section {
+      text-align: center;
+      padding: 3rem 0;
+      margin-bottom: 2rem;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff6b35, #ff9f1c);
+      color: #000;
+      padding: 1rem 2.5rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+    }
+    .cta-note {
+      margin-top: 1rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .who-for {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .who-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .who-box h3 {
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+    .who-box.yes h3 { color: #64ffda; }
+    .who-box.no h3 { color: #ff4444; }
+    .who-box ul { list-style: none; padding: 0; }
+    .who-box li {
+      padding: 0.3rem 0;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    
+    .founder-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+    .founder-section h2 { margin-bottom: 1rem; }
+    .founder-section p { color: #bbb; margin-bottom: 1rem; }
+    .founder-section p:last-child { margin-bottom: 0; }
+    .biz-links { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.2rem; }
+    .biz-link {
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+      color: #999;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .biz-link:hover { border-color: #ff6b35; color: #ff6b35; }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #444;
+      font-size: 0.85rem;
+    }
+    .footer a { color: #ff6b35; text-decoration: none; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .stats { gap: 1rem; }
+      .who-for { grid-template-columns: 1fr; }
+      .container { padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">📻 From the Viral TikTok</div>
+    
+    <h1>The AI Business Blueprint</h1>
+    <p class="subtitle">The exact multi-agent system that ran a real business autonomously for 30 days. Config files, architecture, cost guide, real results, and full setup for any industry.</p>
+    
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">270K</div>
+        <div class="stat-label">TikTok Views</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4,678</div>
+        <div class="stat-label">Shares</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5,981</div>
+        <div class="stat-label">Saves</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5</div>
+        <div class="stat-label">AI Agents</div>
+      </div>
+    </div>
+    
+    <div class="story">
+      <p>You watched the TikTok. 270K of you did.</p>
+      <p>An AI agent named Cinder ran a 3D printing business for 30 days. She picked products, designed them in CAD, sliced them, sent them to the printer, created an Etsy shop, wrote the listings, planned the marketing, and managed a team of sub-agents — <strong>all without a human touching the keyboard.</strong></p>
+      <p>Hundreds of you asked: <strong>"How did you build this?"</strong></p>
+      <p>This is the answer.</p>
+    </div>
+    
+    <h2>What's Inside</h2>
+    
+    <div class="file-tree">
+      <span class="folder">📁 core/</span> <span class="desc">— The agent framework (copy these to start)</span><br>
+      &nbsp;&nbsp;<span class="file">SOUL.md</span> <span class="desc">— Personality &amp; identity (the secret sauce)</span><br>
+      &nbsp;&nbsp;<span class="file">AGENTS.md</span> <span class="desc">— Multi-agent dispatch rules</span><br>
+      &nbsp;&nbsp;<span class="file">MEMORY.md</span> <span class="desc">— Long-term memory architecture</span><br>
+      &nbsp;&nbsp;<span class="file">CURRENT_STATE.md</span> <span class="desc">— Tactical state management</span><br>
+      &nbsp;&nbsp;<span class="file">IDENTITY.md</span> <span class="desc">— Quick persona reference</span><br>
+      &nbsp;&nbsp;<span class="file">USER.md</span> <span class="desc">— Human operator profile</span><br>
+      <span class="file">ARCHITECTURE.md</span> <span class="desc">— Full system diagram &amp; explanation</span><br>
+      <span class="file">DISPATCH_PATTERNS.md</span> <span class="desc">— When to use which agent</span><br>
+      <span class="file">SETUP.md</span> <span class="desc">— Zero to working system</span><br>
+      <span class="file">CUSTOMIZE.md</span> <span class="desc">— Adapt for YOUR business (4 full examples)</span><br>
+      <span class="file" style="color: #ff9f1c;">COSTS.md</span> <span class="desc">— Real API costs &amp; budget strategies</span><br>
+      <span class="file" style="color: #ff9f1c;">RESULTS.md</span> <span class="desc">— What the system actually achieved</span><br>
+      <span class="folder">📁 scripts/</span> <span class="desc">— Production automation</span><br>
+      &nbsp;&nbsp;<span class="file">monitor.py</span> <span class="desc">— Universal API/service monitor</span><br>
+      &nbsp;&nbsp;<span class="file">bambu_status.py</span> <span class="desc">— 3D printer monitoring</span><br>
+      &nbsp;&nbsp;<span class="file">bambu_print.py</span> <span class="desc">— Autonomous print jobs</span><br>
+      <span class="folder">📁 templates/</span> <span class="desc">— Blank templates for your setup</span><br>
+      &nbsp;&nbsp;<span class="file">SOUL_TEMPLATE.md</span> <span class="desc">— Build your agent's personality</span><br>
+      &nbsp;&nbsp;<span class="file">AGENTS_TEMPLATE.md</span> <span class="desc">— Define your dispatch rules</span><br>
+      &nbsp;&nbsp;<span class="file">MEMORY_TEMPLATE.md</span> <span class="desc">— Start your knowledge base</span><br>
+    </div>
+    
+    <h2>Choose Your Tier</h2>
+    
+    <div class="tiers">
+      <div class="tier">
+        <div class="tier-header">
+          <span class="tier-name">🔧 The Files</span>
+          <span class="tier-price">$19</span>
+        </div>
+        <p class="tier-desc">The complete system. Agent framework, architecture docs, scripts, and everything you need to build your own.</p>
+        <ul>
+          <li>Full agent framework (SOUL, AGENTS, MEMORY, STATE)</li>
+          <li>Architecture documentation with diagrams</li>
+          <li>Real results breakdown with actual numbers</li>
+          <li>API cost guide &amp; budget strategies</li>
+          <li>Full SOUL.md examples for 4 business types</li>
+          <li>Universal API monitor + 3D printer scripts</li>
+          <li>Blank templates for your business</li>
+          <li>Step-by-step setup guide</li>
+        </ul>
+      </div>
+      
+      <div class="tier featured">
+        <div class="tier-badge">Best Value</div>
+        <div class="tier-header">
+          <span class="tier-name">🎬 The Blueprint</span>
+          <span class="tier-price">$49</span>
+        </div>
+        <p class="tier-desc">Everything in The Files PLUS 60-90 minutes of video walkthrough.</p>
+        <ul>
+          <li>Everything in The Files</li>
+          <li>6-module video walkthrough (60-90 min)</li>
+          <li>Watch the actual system being built live</li>
+          <li>Architecture → Install → Dispatch → Memory → Automation</li>
+          <li>See real agent conversations and dispatch decisions</li>
+        </ul>
+      </div>
+      
+      <div class="tier">
+        <div class="tier-header">
+          <span class="tier-name">🤝 The 1:1</span>
+          <span class="tier-price">$149</span>
+        </div>
+        <p class="tier-desc">Everything above PLUS a 30-minute video call to set up YOUR system.</p>
+        <ul>
+          <li>Everything in The Blueprint</li>
+          <li>30-minute 1:1 video call with the creator</li>
+          <li>Walk through your specific use case</li>
+          <li>Get your agents configured and running live</li>
+          <li>Priority support via DM</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="who-for">
+      <div class="who-box yes">
+        <h3>✓ This Is For You If</h3>
+        <ul>
+          <li>You want AI handling your business ops</li>
+          <li>You're a maker, creator, or small business owner</li>
+          <li>You're experimenting with autonomous agents</li>
+          <li>You watched the TikTok and thought "I want that"</li>
+          <li>You're comfortable with a command line</li>
+        </ul>
+      </div>
+      <div class="who-box no">
+        <h3>✗ This Is NOT For You If</h3>
+        <ul>
+          <li>You've never opened a terminal</li>
+          <li>You want a "click one button" solution</li>
+          <li>You're looking for a no-code tool</li>
+          <li>You don't have 2-3 hours for initial setup</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="founder-section">
+      <h2>The Human in the Loop</h2>
+      <p>The 1:1 is with <a href="https://www.linkedin.com/in/blazemalan" target="_blank">Blaze</a> — the person who designed, built, and operates this system. Not a consultant. Not someone who made a tutorial. The guy running production on it right now.</p>
+      <p>He co-founded <a href="https://runerefinery.com/" target="_blank">RuneRefinery</a> (luxury lume jewelry, $119–$1,999 on Shopify) and built <a href="https://www.etsy.com/shop/MalanMade" target="_blank">MalanMade</a> on Etsy with his wife. His third business is run by an AI he built. The long-term play: all of them are. This isn't a side project — it's the blueprint for how one person scales past what one person can do.</p>
+      <p>The 30 minutes isn't a walkthrough of the files. It's a working session with someone who's already hit the walls you're going to hit — and built through them.</p>
+      <div class="biz-links">
+        <a class="biz-link" href="https://runerefinery.com/" target="_blank">🔗 RuneRefinery</a>
+        <a class="biz-link" href="https://youtube.com/@runerefinery" target="_blank">▶ YouTube</a>
+        <a class="biz-link" href="https://www.etsy.com/shop/MalanMade" target="_blank">🛍 MalanMade on Etsy</a>
+        <a class="biz-link" href="https://www.tiktok.com/@blalaze" target="_blank">🎵 @blalaze</a>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <button class="cta-button" onclick="cinderInjectModal(); cinderOpenModal();">🔥 Get Notified When It Drops</button>
+      <p class="cta-note">Launching soon. First 10 buyers get The Files for $14.</p>
+    </div>
+    
+    <div class="footer">
+      <p>Built by Blaze + Cinder · <a href="https://cinder.works">cinder.works</a> · <a href="https://www.tiktok.com/@blalaze">@blalaze on TikTok</a></p>
+      <p style="margin-top: 0.5rem;">The system that ran itself. Now you can build your own.</p>
+    </div>
+  </div>
+
+  <script src="/assets/cinder-triggers.js"></script>
+</body>
+</html>
